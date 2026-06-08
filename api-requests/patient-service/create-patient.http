@@ -1,0 +1,4 @@
+### POST Request to create a patient
+POST http://localhost:4000/patients
+
+
