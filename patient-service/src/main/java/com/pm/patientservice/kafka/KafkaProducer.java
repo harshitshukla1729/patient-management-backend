@@ -26,7 +26,15 @@ public class KafkaProducer {
                 .build();
 
         try {
-            kafkaTemplate.send("patient", patientEvent.toByteArray());
+            kafkaTemplate.send("patient", patientEvent.toByteArray())
+                    .whenComplete((result, ex) -> {
+                        if (ex != null) {
+                            log.error("Kafka send failed", ex);
+                        } else {
+                            log.info("Kafka message sent. Offset={}",
+                                    result.getRecordMetadata().offset());
+                        }
+                    });
         } catch (Exception e) {
             log.error("Error in sending PatientEvent: {}", patientEvent);
         }
